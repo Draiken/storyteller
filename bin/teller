@@ -1,0 +1,11 @@
+#!/usr/bin/env ruby
+
+$LOAD_PATH.unshift "lib"
+
+require 'storyteller'
+
+code = File.read(ARGV.shift)
+
+char = Storyteller::DSL.parse(code)
+puts "str: " + char.str.to_s
+puts "brawl: " + char.brawl.to_s

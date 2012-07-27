@@ -1,0 +1,9 @@
+char "lala" do
+  puts self
+  skills do
+    puts self
+    brawl "lalala" 
+    self.brawl = 5
+  end
+
+end

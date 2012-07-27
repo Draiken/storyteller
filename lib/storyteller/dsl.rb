@@ -1,25 +1,11 @@
-class Proc #:nodoc:
-  def bind(object)
-    block, time = self, Time.now
-    object.class_eval do
-      method_name = "__bind_#{time.to_i}_#{time.usec}"
-      define_method(method_name, &block)
-      method = instance_method(method_name)
-      remove_method(method_name)
-      method
-    end.bind(object)
-  end
-end
-
-
 module Storyteller
 
   module DSL
 
     def self.parse(code)
       dsl = Parser.new
-      puts code
       char = dsl.instance_eval(code.to_s)
+      puts char.inspect
       char
     end
 
@@ -27,7 +13,6 @@ module Storyteller
       def char(name, &block)
         char = Character.new
         char.name = name
-        block.bind char
         char.instance_eval(&block)
         char
       end
@@ -41,10 +26,26 @@ module Storyteller
       attr_accessor :str, :dex, :sta, :cha, :man, :app, :per, :int, :wit
   
       # skills
-      attr_accessor :brawl
+      #attr_accessor :brawl
 
       # spheres
       attr_accessor :prime, :forces
+
+      def brawl=(val)
+        puts "LOLOLOL"
+        @brawl = val
+      end
+
+      def brawl(val = nil)
+        @brawl ||= val
+      end
+
+      def lala
+        puts self
+        puts self.methods.grep /\=/
+        @brawl = 5
+        puts "lala"
+      end
       
       def attr(*args)
         str, dex, sta  = args[0]
@@ -53,15 +54,12 @@ module Storyteller
       end
 
       def skills(&block)
-        instance_eval &block
-        #new_self = block.binding.eval("self")
-        #Proc.new { new_self.instance_eval &block }
+        puts block.inspect
+        self.instance_exec &block
       end
 
       def spheres(&block)
-        instance_eval &block
-        #block.bind(self)
-        #block.call
+        self.instance_eval &block
       end
     end
 

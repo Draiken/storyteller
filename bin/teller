@@ -1,11 +1,18 @@
 #!/usr/bin/env ruby
 
-$LOAD_PATH.unshift "lib"
+$LOAD_PATH.unshift "lib", "."
 
+require 'optparse'
 require 'storyteller'
 
-code = File.read(ARGV.shift)
+Storyteller.setup
+@char = Storyteller.parse_file(ARGV[0])
 
-char = Storyteller::DSL.parse(code)
-puts "str: " + char.str.to_s
-puts "brawl: " + char.brawl.to_s
+OptionParser.new do |o|
+
+  o.banner = "Usage: teller [file] [options]"
+  
+  o.on("-e", "--export FORMAT", "Export character") do |format|
+    Storyteller.export(@char, format)
+  end
+end.parse!

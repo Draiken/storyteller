@@ -4,6 +4,15 @@ require 'yaml'
 
 module Storyteller
 
+  @@output_file = nil
+  def self.output_file=(file)
+    @@output_file = file
+  end
+
+  def self.output_file
+    @@output_file
+  end
+
   def self.setup
     @@base = ::YAML.load_file('sheets/base.yml')
 
@@ -17,15 +26,8 @@ module Storyteller
   def self.parse_file(file)
     code = File.read(file)
     char = Storyteller::DSL.parse(code)
-    puts char.inspect
     char
   end
 
-  def self.export(char, format)
-    puts "Exporting character to format #{format}"
-    exporter = Exporters.for(format)
-
-    exporter.export(char)
-  end
 
 end

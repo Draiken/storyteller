@@ -4,7 +4,7 @@ module Storyteller
   module Exporters
     class YAML < Base
 
-      def export(character)
+      def export(character, options = {})
         hash = Hash.new
         hash[:name] = character.name
 
@@ -14,9 +14,13 @@ module Storyteller
           end
         end
 
-        File.open( "#{character.name.downcase.gsub(/\s+/, '_')}.yaml", 'w' ) do |out|
+        File.open( filename(character, options[:output_file]), 'w' ) do |out|
           ::YAML.dump( hash, out )
         end
+      end
+
+      def filename(character, output_file)
+        output_file || "#{character.name.downcase.gsub(/\s+/, '_')}.yaml"
       end
 
     end # YAMLExporter < Base

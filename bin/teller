@@ -4,15 +4,6 @@ $LOAD_PATH.unshift "lib", "."
 
 require 'optparse'
 require 'storyteller'
+require 'storyteller/cli'
 
-Storyteller.setup
-@char = Storyteller.parse_file(ARGV[0])
-
-OptionParser.new do |o|
-
-  o.banner = "Usage: teller [file] [options]"
-  
-  o.on("-e", "--export FORMAT", "Export character") do |format|
-    Storyteller.export(@char, format)
-  end
-end.parse!
+Storyteller::CLI.parse(ARGV)
